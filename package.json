@@ -1,0 +1,21 @@
+{
+  "name": "a-native-example",
+  "version": "0.0.0",
+  "description": "An example Node.js native module",
+  "main": "index.js",
+  "dependencies": {
+    "nan": "^2.6.2",
+    "node-gyp-build": "^3.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/a-native-example.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/a-native-example/issues"
+  },
+  "homepage": "https://github.com/mafintosh/a-native-example"
+}
