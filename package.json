@@ -7,7 +7,12 @@
     "nan": "^2.6.2",
     "node-gyp-build": "^3.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "^4.6.3"
+  },
+  "scripts": {
+    "test": "tape test.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mafintosh/a-native-example.git"
