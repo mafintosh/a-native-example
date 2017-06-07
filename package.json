@@ -11,7 +11,8 @@
     "prebuildify": "^2.4.0",
     "request": "^2.81.0",
     "tape": "^4.6.3",
-    "tar-fs": "^1.15.3"
+    "tar-fs": "^1.15.3",
+    "travis-logs": "^2.2.3"
   },
   "scripts": {
     "test": "tape test.js && node release.js",
