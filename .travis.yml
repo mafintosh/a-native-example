@@ -8,8 +8,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - gcc-multilib
-      - g++-multilib
+      - gcc-4.8-multilib
+      - g++-4.8-multilib
 
 node_js:
   - "8"
