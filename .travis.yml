@@ -10,6 +10,8 @@ addons:
       - g++-4.8
       - gcc-4.8-multilib
       - g++-4.8-multilib
+      - gcc-multilib
+      - g++-multilib
 
 node_js:
   - "8"
