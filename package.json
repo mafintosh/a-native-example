@@ -15,6 +15,7 @@
     "travis-logs": "^2.2.3"
   },
   "scripts": {
+    "install": "node-gyp-build",
     "test": "tape test.js && node release.js",
     "prebuild": "prebuildify --all --strip"
   },
