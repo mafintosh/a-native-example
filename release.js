@@ -5,24 +5,38 @@ var spawn = require('child_process').spawn
 var path = require('path')
 var tar = require('tar-fs')
 var crypto = require('crypto')
+var request = require('request')
 
 var WINDOWS = process.platform === 'win32'
+var SERVER = 'nodejs-prebuilds.s3.eu-central-1.amazonaws.com'
 
-build(false, function (err) {
+build(false, function (err, buf, name) {
   if (err) process.exit(1)
-  if (process.platform !== 'linux') return
-
-  build(true, function (err) {
+  if (process.platform !== 'linux') return upload(buf, name)
+  build(true, function (err, buf, name) {
     if (err) process.exit(1)
+    upload(buf, name)
   })
 })
+
+function upload (buf, name) {
+  var server = SERVER.indexOf('://') > -1 ? SERVER : 'http://' + SERVER // no need for https, content addressed
+  request.put(server + '/' + name, {body: buf}, function (err, res) {
+    if (err) {
+      console.error(err.message)
+      process.exit(1)
+    }
+    if (!/2\d\d/.test(res.statusCode)) {
+      console.error('Bad status code:', res.statusCode)
+      process.exit(2)
+    }
+  })
+}
 
 function build (ia32, cb) {
   shouldRelease(function (err, version) {
     if (err) return cb(err)
     if (!version) return cb(null, null)
-
-    console.log('releasing ...')
 
     spawn(WINDOWS ? 'npm.cmd' : 'npm',  ['run', 'prebuild' + (ia32 ? '-ia32' : '')], {stdio: 'inherit'}).on('exit', function (code) {
       if (code) return cb(new Error('Build failed'))
@@ -43,7 +57,7 @@ function build (ia32, cb) {
 
         console.log('PREBUILD WAS SUCCESFUL: ' + hash + '.sha256.tar')
 
-        cb(null, version)
+        cb(null, buf, hash + '.sha256.tar')
       })
     })
   })
