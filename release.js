@@ -6,7 +6,7 @@ var path = require('path')
 var tar = require('tar-fs')
 var crypto = require('crypto')
 
-var WINDOWS = process.platform() === 'win32'
+var WINDOWS = process.platform === 'win32'
 
 shouldRelease(function (err, version) {
   if (err) throw err
