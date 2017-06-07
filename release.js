@@ -8,33 +8,47 @@ var crypto = require('crypto')
 
 var WINDOWS = process.platform === 'win32'
 
-shouldRelease(function (err, version) {
-  if (err) throw err
-  if (!version) return
+build(false, function (err) {
+  if (err) process.exit(1)
+  if (process.platform !== 'linux') return
 
-  console.log('releasing ...')
-
-  spawn(WINDOWS ? 'npm.cmd' : 'npm',  ['run', 'prebuild'], {stdio: 'inherit'}).on('exit', function (code) {
-    if (code) return process.exit(1)
-
-    var stream = tar.pack(path.join(__dirname, 'prebuilds'))
-    var bufs = []
-
-    stream.on('readable', function () {
-      var data
-      while ((data = stream.read())) {
-        bufs.push(data)
-      }
-    })
-    stream.on('end', function () {
-      var buf = Buffer.concat(bufs)
-      var hash = crypto.createHash('sha256').update(buf).digest('hex')
-
-      console.log('PREBUILD WAS SUCCESFUL: ' + hash + '.sha256.tar')
-      process.exit(0)
-    })
+  build(true, function (err) {
+    if (err) process.exit(1)
   })
 })
+
+function build (ia32, cb) {
+  shouldRelease(function (err, version) {
+    if (err) return cb(err)
+    if (!version) return cb(null, null)
+
+    console.log('releasing ...')
+
+    spawn(WINDOWS ? 'npm.cmd' : 'npm',  ['run', 'prebuild' + (ia32 ? '-ia32' : '')], {stdio: 'inherit'}).on('exit', function (code) {
+      if (code) return cb(new Error('Build failed'))
+
+      var stream = tar.pack(path.join(__dirname, 'prebuilds'))
+      var bufs = []
+
+      stream.on('readable', function () {
+        var data
+        while ((data = stream.read())) {
+          bufs.push(data)
+        }
+      })
+
+      stream.on('end', function () {
+        var buf = Buffer.concat(bufs)
+        var hash = crypto.createHash('sha256').update(buf).digest('hex')
+
+        console.log('PREBUILD WAS SUCCESFUL: ' + hash + '.sha256.tar')
+
+        cb(null, version)
+      })
+    })
+  })
+}
+
 
 function shouldRelease (cb) {
   return cb(null, true)

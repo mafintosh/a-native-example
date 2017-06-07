@@ -15,7 +15,8 @@
   },
   "scripts": {
     "test": "tape test.js && node release.js",
-    "prebuild": "prebuildify --all --strip"
+    "prebuild": "prebuildify --all --strip",
+    "prebuild-ia32": "prebuildify --all --strip --arch=ia32"
   },
   "bin": {
     "tmp-release": "./release.js"
