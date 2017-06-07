@@ -13,4 +13,4 @@ NAN_MODULE_INIT(InitAll) {
   Nan::Set(target, Nan::New<String>("print").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Print)).ToLocalChecked());
 }
 
-NODE_MODULE(mknod, InitAll)
+NODE_MODULE(a_native_module, InitAll)
