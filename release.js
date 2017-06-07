@@ -63,7 +63,7 @@ function build (ia32, cb) {
       })
 
       stream.on('end', function () {
-        lib.gzip(Buffer.concat(bufs), function (err, buf) {
+        zlib.gzip(Buffer.concat(bufs), function (err, buf) {
           if (err) return cb(err)
           var hash = crypto.createHash('sha256').update(buf).digest('hex')
           cb(null, buf, hash + '.sha256.tar.gz')
