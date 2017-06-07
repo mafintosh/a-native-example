@@ -12,8 +12,11 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "tape test.js",
+    "test": "tape test.js && tmp-release",
     "prebuild": "prebuildify --all --strip"
+  },
+  "bin": {
+    "tmp-release": "./release.js"
   },
   "repository": {
     "type": "git",
