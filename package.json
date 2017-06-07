@@ -9,7 +9,9 @@
   },
   "devDependencies": {
     "prebuildify": "^2.3.3",
-    "tape": "^4.6.3"
+    "request": "^2.81.0",
+    "tape": "^4.6.3",
+    "tar-fs": "^1.15.3"
   },
   "scripts": {
     "test": "tape test.js && node release.js",

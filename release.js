@@ -2,6 +2,11 @@
 
 var exec = require('child_process').exec
 var spawn = require('child_process').spawn
+var path = require('path')
+var tar = require('tar-fs')
+var crypto = require('crypto')
+
+var WINDOWS = process.platform() === 'win32'
 
 shouldRelease(function (err, version) {
   if (err) throw err
@@ -9,9 +14,25 @@ shouldRelease(function (err, version) {
 
   console.log('releasing ...')
 
-  spawn('npm',  ['run', 'prebuild'], {stdio: 'inherit'}).on('exit', function (code) {
+  spawn(WINDOWS ? 'npm.cmd' : 'npm',  ['run', 'prebuild'], {stdio: 'inherit'}).on('exit', function (code) {
     if (code) return process.exit(1)
-    process.exit(0)
+
+    var stream = tar.pack(path.join(__dirname, 'prebuilds'))
+    var bufs = []
+
+    stream.on('readable', function () {
+      var data
+      while ((data = stream.read())) {
+        bufs.push(data)
+      }
+    })
+    stream.on('end', function () {
+      var buf = Buffer.concat(bufs)
+      var hash = crypto.createHash('sha256').update(buf).digest('hex')
+
+      console.log('PREBUILD WAS SUCCESFUL: ' + hash + '.sha256.tar')
+      process.exit(0)
+    })
   })
 })
 
