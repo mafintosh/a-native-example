@@ -12,7 +12,7 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "tape test.js && tmp-release",
+    "test": "tape test.js && ./release.js",
     "prebuild": "prebuildify --all --strip"
   },
   "bin": {
